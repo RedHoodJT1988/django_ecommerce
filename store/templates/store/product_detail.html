@@ -1,0 +1,22 @@
+{% extends "store/base.html" %}
+{% block title %}{{ product.name }} | Wvstelvnd{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6">
+        {% if product.image %}
+        <img src="{{ product.image.url }}" class="img-fluid rounded shadow" alt="{{ product.name }}">
+        {% else %}
+        <img src="https://via.placeholder.com/400x300?text=No+Image" class="img-fluid rounded shadow" alt="No image">
+        {% endif %}
+    </div>
+    <div class="col-md-6">
+        <h1 class="fw-bold" style="color: var(--persian-indigo);">{{ product.name }}</h1>
+        <p class="lead" style="color: var(--grape);">{{ product.description }}</p>
+        <p class="fw-bold" style="color: var(--yellow-green); font-size:1.5rem;">${{ product.price }}</p>
+        <a href="{% url 'store:add_to_cart' product.pk %}" class="btn btn-yellow-green me-2">Add to Cart</a>
+        <a href="/cart/" class="btn btn-indigo me-2">View Cart</a>
+        <a href="/products/" class="btn btn-indigo">Back to Products</a>
+    </div>
+</div>
+{% endblock %}

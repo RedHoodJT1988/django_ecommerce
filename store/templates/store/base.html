@@ -1,0 +1,151 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}E-Commerce Store{% endblock %}</title>
+    <!-- Bootstrap 5 CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="{% static 'store/css/custom.css' %}" rel="stylesheet">
+    {% block extra_head %}{% endblock %}
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg" style="background-color: #421569;">
+        <div class="container-fluid">
+            <a class="navbar-brand d-flex align-items-center" href="/" style="padding:0;">
+                <!-- Wvstelvnd SVG Logo -->
+                <svg width="200" height="70" viewBox="0 0 200 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="7.5" y="10" width="185" height="50" rx="12" fill="black" fill-opacity="0.5"
+                        stroke="#995BD5" stroke-width="2" />
+                    <g>
+                        <text x="100" y="45" text-anchor="middle" font-size="23"
+                            font-family="Arial Black, Arial, sans-serif" fill="url(#chromeGradient)"
+                            stroke="url(#chromeStroke)" stroke-width="2" filter="url(#glow)">
+                            WVSTELVND
+                        </text>
+                        <defs>
+                            <linearGradient id="chromeGradient" x1="0" y1="0" x2="200" y2="70"
+                                gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#CBA6F7" />
+                                <stop offset="0.5" stop-color="#96D7F7" />
+                                <stop offset="1" stop-color="#AEEAF7" />
+                            </linearGradient>
+                            <linearGradient id="chromeStroke" x1="0" y1="0" x2="200" y2="70"
+                                gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#CBA6F7" />
+                                <stop offset="1" stop-color="#96D7F7" />
+                            </linearGradient>
+                            <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+                                <feGaussianBlur stdDeviation="3" result="coloredBlur" />
+                                <feMerge>
+                                    <feMergeNode in="coloredBlur" />
+                                    <feMergeNode in="SourceGraphic" />
+                                </feMerge>
+                            </filter>
+                        </defs>
+                    </g>
+                </svg>
+                </svg>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="d-flex align-items-center ms-auto" style="padding-right: 5px;">
+                <a class="nav-link text-white position-relative me-2" style="margin-right:5px;" href="/cart/">
+                    <!-- Shopping Cart SVG Icon -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#96D74C" viewBox="0 0 24 24"
+                        style="vertical-align:middle;">
+                        <path
+                            d="M7 18c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm10 0c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm-12.016-2l-.984-2h16v2h-15.016zm16.016-4v2h-16v-2h16zm-16-2v2h16v-2h-16zm16-2v2h-16v-2h16zm-16-2v2h16v-2h-16zm16-2v2h-16v-2h16zm-16-2v2h16v-2h-16z" />
+                    </svg>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                        {{ cart_total_quantity }}
+                    </span>
+                </a>
+                <!-- Light/Dark Mode Toggle -->
+                <button id="mode-toggle" class="btn btn-link nav-link ms-2" style="margin-left:5px;"
+                    title="Toggle light/dark mode">
+                    <span id="mode-icon">
+                        <!-- Sun icon (default) -->
+                        <svg id="icon-sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#96D74C"
+                            viewBox="0 0 24 24" style="vertical-align:middle;">
+                            <circle cx="12" cy="12" r="5" fill="#96D74C" />
+                            <g stroke="#995BD5" stroke-width="2">
+                                <line x1="12" y1="1" x2="12" y2="4" />
+                                <line x1="12" y1="20" x2="12" y2="23" />
+                                <line x1="4.22" y1="4.22" x2="6.34" y2="6.34" />
+                                <line x1="17.66" y1="17.66" x2="19.78" y2="19.78" />
+                                <line x1="1" y1="12" x2="4" y2="12" />
+                                <line x1="20" y1="12" x2="23" y2="12" />
+                                <line x1="4.22" y1="19.78" x2="6.34" y2="17.66" />
+                                <line x1="17.66" y1="6.34" x2="19.78" y2="4.22" />
+                            </g>
+                        </svg>
+                        <!-- Moon icon (hidden by default) -->
+                        <svg id="icon-moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#CBA6F7"
+                            viewBox="0 0 24 24" style="vertical-align:middle; display:none;">
+                            <path id="moon-path"
+                                d="M21 12.79A9 9 0 0 1 12.21 3c-.55 0-.99.45-.99 1 0 4.97 4.03 9 9 9 .55 0 1-.44 1-.99z"
+                                fill="#CBA6F7" />
+                        </svg>
+                    </span>
+                </button>
+                {% if user.is_authenticated %}
+                <span class="nav-link text-white ms-2" style="margin-left:5px;">Hello, {{ user.username }}!</span>
+                <a class="nav-link text-white ms-2" style="margin-left:5px;" href="{% url 'store:logout' %}">Logout</a>
+                {% else %}
+                <a class="btn btn-yellow-green ms-2 px-3 py-1 fw-bold" style="margin-left:5px;"
+                    href="{% url 'store:login' %}">Login</a>
+                <a class="btn btn-grape ms-2 px-3 py-1 fw-bold" style="margin-left:5px;"
+                    href="{% url 'store:register' %}">Register</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+    <main class="container mt-4">
+        {% block content %}{% endblock %}
+    </main>
+    <footer class="text-center py-2 mt-auto"
+        style="background-color: #721CB8; color: #fff; position: fixed; left: 0; bottom: 0; width: 100%;">
+        &copy; 2025 Wvstelvnd
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Light/Dark mode toggle logic
+        const modeToggle = document.getElementById('mode-toggle');
+        const iconSun = document.getElementById('icon-sun');
+        const iconMoon = document.getElementById('icon-moon');
+        function setMode(dark) {
+            if (dark) {
+                document.body.classList.add('dark-mode');
+                iconSun.style.display = 'none';
+                iconMoon.style.display = 'inline';
+                // Lighten moon icon in dark mode
+                document.getElementById('moon-path').setAttribute('fill', '#CBA6F7');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                document.body.classList.remove('dark-mode');
+                iconSun.style.display = 'inline';
+                iconMoon.style.display = 'none';
+                // Reset moon icon color
+                document.getElementById('moon-path').setAttribute('fill', '#995BD5');
+                localStorage.setItem('theme', 'light');
+            }
+        }
+        modeToggle.addEventListener('click', function () {
+            setMode(!document.body.classList.contains('dark-mode'));
+        });
+        // On page load, set mode from localStorage
+        window.addEventListener('DOMContentLoaded', function () {
+            setMode(localStorage.getItem('theme') === 'dark');
+        });
+    </script>
+    {% block extra_js %}{% endblock %}
+</body>
+
+</html>

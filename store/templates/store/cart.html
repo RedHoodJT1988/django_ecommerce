@@ -1,0 +1,36 @@
+{% extends "store/base.html" %}
+{% block title %}Shopping Cart | Wvstelvnd{% endblock %}
+
+{% block content %}
+<h1 class="mb-4 fw-bold" style="color: var(--persian-indigo);">Shopping Cart</h1>
+{% if cart_items %}
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>Total</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in cart_items %}
+        <tr>
+            <td>{{ item.product.name }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>${{ item.total }}</td>
+            <td>
+                <a href="{% url 'store:remove_from_cart' item.product.pk %}" class="btn btn-danger btn-sm">Remove</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<p class="fw-bold">Total: ${{ total_price }}</p>
+<a href="{% url 'store:checkout' %}" class="btn btn-yellow-green me-2">Checkout with Stripe</a>
+<a href="/products/" class="btn btn-indigo">Continue Shopping</a>
+{% else %}
+<p>Your cart is empty.</p>
+<a href="/products/" class="btn btn-indigo">Shop Products</a>
+{% endif %}
+{% endblock %}
